@@ -464,7 +464,7 @@ def train(train_loader, train_transform, model, model_icr, model_pfr, model_prp,
         absolute_t1 = torch.cat([absolute_t1, absolute_t2, absolute_t3],0)
         
         course_t = absolute_t1 - trans.squeeze(3).squeeze(2).data.cpu()
-        course_r = get_coarse_quaternion(absolute_r1, quat.squeeze(3).squeeze(2).data.cpu() * [1, -1, -1, -1])
+        course_r = get_coarse_quaternion(absolute_r1, quat.squeeze(3).squeeze(2).data.cpu() * np.array([1, -1, -1, -1], np.float32))
         course_rt = torch.cat([course_r, course_t], 1).numpy()
         #print(anchor_name, absolute_r1.size(), quat.size(), course_t, course_r)
         
