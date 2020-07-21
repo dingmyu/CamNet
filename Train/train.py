@@ -325,7 +325,7 @@ def main():
     train_data = datasets.SegData(split='train', data_root=args.data_root, data_list=args.train_list, transform=train_transform)
     train_sampler = DistributedSampler(train_data)
     train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size, shuffle=False, num_workers=args.workers, pin_memory=False, sampler=train_sampler)
-    TripletLoss = HardTripletLoss(hardest=False, squared=False)
+    TripletLoss = HardTripletLoss(hardest=True, squared=False)
 
     if args.evaluate:
         val_transform = transforms.Compose([
