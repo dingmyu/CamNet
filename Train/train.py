@@ -453,9 +453,9 @@ def train(train_loader, train_transform, model, model_icr, model_pfr, model_prp,
         proj_var = torch.autograd.Variable(proj)
         
         triple_loss = TripletLoss(x1_ICR.squeeze(3).squeeze(2), x2_ICR.squeeze(3).squeeze(2)) / world_size
-        t_loss = criterion(trans, translation_var) / world_size
-        r_loss = criterion(quat, quaternions_var) / world_size
-        proj_loss = criterion(proj_ICR, proj_var) / world_size
+        t_loss = criterion(trans.squeeze(3).squeeze(2), translation_var) / world_size
+        r_loss = criterion(quat.squeeze(3).squeeze(2), quaternions_var) / world_size
+        proj_loss = criterion(proj_ICR.squeeze(3).squeeze(2), proj_var) / world_size
         
         #########################################################################################
         
@@ -514,8 +514,8 @@ def train(train_loader, train_transform, model, model_icr, model_pfr, model_prp,
             _, _, anchor_PRP = model(fine_anchor_var)
             _, _, imgs_PRP = model(fine_imgs_var)
             trans_PRP, quat_PRP = model_prp(torch.cat([anchor_PRP,imgs_PRP], 1))
-            r_fine_loss += criterion(quat_PRP, fine_rela_r_var) / world_size / len(anchor_name)
-            t_fine_loss += criterion(trans_PRP, fine_rela_t_var) / world_size / len(anchor_name)
+            r_fine_loss += criterion(quat_PRP.squeeze(3).squeeze(2), fine_rela_r_var) / world_size / len(anchor_name)
+            t_fine_loss += criterion(trans_PRP.squeeze(3).squeeze(2), fine_rela_t_var) / world_size / len(anchor_name)
             if rank == 0:
                 print(anchor_name[i], args.data_root + fine_list[i], fine_list[i+len(anchor_name)], fine_list[i+len(anchor_name)+len(anchor_name)], fine_anchor_r, fine_anchor_t, fine_rela_t, fine_rela_r)
             #print(anchor_name[i], args.data_root + fine_list[i], fine_anchor_r[i], fine_anchor_t[i], fine_rt_list[i], fine_rt_list[i+len(anchor_name)], fine_rt_list[i+len(anchor_name)+len(anchor_name)])
